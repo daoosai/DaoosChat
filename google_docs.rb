@@ -23,4 +23,26 @@ module GoogleDocs
     warn "[Google Docs] Error: #{e.message}"
     raise "Document fetch error: #{e.message}"
   end
+
+  def parse_sections(text)
+    sections = {}
+    current = nil
+    buffer = []
+    text.each_line do |line|
+      case line.strip
+      when /^#\s*SYSTEM_PROMPT/i
+        sections[current] = buffer.join("\n").strip if current
+        current = :system_prompt
+        buffer = []
+      when /^#\s*FAQ/i
+        sections[current] = buffer.join("\n").strip if current
+        current = :faq
+        buffer = []
+      else
+        buffer << line if current
+      end
+    end
+    sections[current] = buffer.join("\n").strip if current
+    { system_prompt: sections[:system_prompt], faq: sections[:faq] }
+  end
 end
