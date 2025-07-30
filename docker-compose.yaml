@@ -15,9 +15,13 @@ services:
     ports:
       - '3000:3000'
     environment:
-      - NODE_ENV=production
       - RAILS_ENV=production
+      - NODE_ENV=production
       - INSTALLATION_ENV=docker
+      - DATABASE_URL=postgres://postgres:supersecure123@postgres:5432/chatwoot
+      - REDIS_URL=redis://:redispass123@redis:6379
+      - SECRET_KEY_BASE=11860b3dd8e707e0c25f8fb5cd9ada771e9b437b17b0a4492bba36850cbfe71451d0451d264122830e831f55706bbd4352cb18b6e7dddba0cf61c7b63cc5d2de
+      - FRONTEND_URL=https://chat.daoos.ai
     entrypoint: docker/entrypoints/rails.sh
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
     restart: always
@@ -31,6 +35,7 @@ services:
       - NODE_ENV=production
       - RAILS_ENV=production
       - INSTALLATION_ENV=docker
+      - DATABASE_URL=postgres://postgres:supersecure123@postgres:5432/chatwoot
     command: ['bundle', 'exec', 'sidekiq', '-C', 'config/sidekiq.yml']
     restart: always
 
