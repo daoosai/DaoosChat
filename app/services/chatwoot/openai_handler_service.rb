@@ -15,7 +15,10 @@ class Chatwoot::OpenaiHandlerService
     prompt = system_prompt.to_s
     prompt += "\n\nFAQ:\n#{faq}" if faq.present?
     reply = generate_reply(prompt, message_content)
-    send_reply(reply) if reply.present?
+    if reply.present?
+      send_reply(reply)
+      log_reply(reply)
+    end
   rescue StandardError => e
     Rails.logger.error("[OpenaiHandlerService] #{e.message}")
   end
@@ -64,5 +67,26 @@ class Chatwoot::OpenaiHandlerService
     }
     body = { content: text, message_type: 'outgoing' }.to_json
     HTTParty.post(url, headers: headers, body: body)
+  end
+
+  def log_reply(text)
+    account_id = @payload.dig(:account, :id) || @payload[:account_id] ||
+                 @payload.dig(:conversation, :account_id)
+    conversation_id = @payload.dig(:conversation, :id)
+    return unless account_id && conversation_id
+
+    existing_logs = Array(custom_attrs[:ai_log])
+    existing_logs << { timestamp: Time.current.utc.iso8601, text: text }
+    logs = existing_logs.last(5)
+
+    url = "https://#{ENV.fetch('CHATWOOT_HOST')}/api/v1/accounts/#{account_id}/conversations/#{conversation_id}/custom_attributes"
+    headers = {
+      'Content-Type' => 'application/json',
+      'api_access_token' => ENV.fetch('CHATWOOT_API_KEY')
+    }
+    body = { custom_attributes: { ai_log: logs } }.to_json
+    HTTParty.post(url, headers: headers, body: body)
+  rescue StandardError => e
+    Rails.logger.error("[OpenaiHandlerService] #{e.message}")
   end
 end
