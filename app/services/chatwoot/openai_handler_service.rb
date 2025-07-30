@@ -7,7 +7,7 @@ class Chatwoot::OpenaiHandlerService
   def perform
     return unless ai_enabled?
 
-    doc_url = custom_attrs[:google_doc_url]
+    doc_url = ENV['GOOGLE_DOC_URL'] || custom_attrs[:google_doc_url]
     doc_text = GoogleDocs.extract_text_from_public_doc(doc_url)
     sections = GoogleDocs.parse_sections(doc_text)
     system_prompt = sections[:system_prompt]

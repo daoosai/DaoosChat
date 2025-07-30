@@ -77,6 +77,7 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
 
   def toggle_status
     # FIXME: move this logic into a service object
+    previous_status = @conversation.status
     if pending_to_open_by_bot?
       @conversation.bot_handoff!
     elsif params[:status].present?
@@ -86,6 +87,7 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
       @status = @conversation.toggle_status
     end
     assign_conversation if should_assign_conversation?
+    handoff_to_agent(previous_status)
   end
 
   def pending_to_open_by_bot?
@@ -96,6 +98,16 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
 
   def should_assign_conversation?
     @conversation.status == 'open' && Current.user.is_a?(User) && Current.user&.agent?
+  end
+
+  def handoff_to_agent(previous_status)
+    return unless previous_status == 'pending'
+    return unless @conversation.status == 'open'
+    return unless Current.user.is_a?(User)
+
+    Chatwoot::CustomAttributesUpdater.new(@conversation)
+                                     .update(ai_disabled: true,
+                                             ai_last_user_activity_at: Time.current.utc.iso8601)
   end
 
   def toggle_priority
