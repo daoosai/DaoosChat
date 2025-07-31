@@ -113,6 +113,7 @@ class Conversation < ApplicationRecord
   before_save :ensure_snooze_until_reset
   before_create :determine_conversation_status
   before_create :ensure_waiting_since
+  before_create :set_default_ai_enabled
 
   after_update_commit :execute_after_update_commit_callbacks
   after_create_commit :notify_conversation_creation
@@ -219,6 +220,11 @@ class Conversation < ApplicationRecord
 
   def ensure_waiting_since
     self.waiting_since = created_at
+  end
+
+  def set_default_ai_enabled
+    self.custom_attributes ||= {}
+    self.custom_attributes['ai_enabled'] = true unless custom_attributes.key?('ai_enabled')
   end
 
   def validate_additional_attributes
