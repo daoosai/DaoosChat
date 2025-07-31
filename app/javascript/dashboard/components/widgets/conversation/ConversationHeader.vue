@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { useElementSize } from '@vueuse/core';
@@ -8,6 +8,7 @@ import InboxName from '../InboxName.vue';
 import MoreActions from './MoreActions.vue';
 import Thumbnail from '../Thumbnail.vue';
 import SLACardLabel from './components/SLACardLabel.vue';
+import ToggleSwitch from 'dashboard/components-next/switch/Switch.vue';
 import wootConstants from 'dashboard/constants/globals';
 import { conversationListPageURL } from 'dashboard/helper/URLHelper';
 import { snoozedReopenTime } from 'dashboard/helper/snoozeHelpers';
@@ -90,6 +91,29 @@ const hasMultipleInboxes = computed(
 );
 
 const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
+
+const aiDisabled = ref(false);
+
+watch(
+  () => currentChat.value?.custom_attributes?.ai_disabled,
+  value => {
+    aiDisabled.value = !!value;
+  },
+  { immediate: true }
+);
+
+const onToggleAiDisabled = async () => {
+  const updatedAttributes = {
+    ...(currentChat.value.custom_attributes || {}),
+    ai_disabled: aiDisabled.value,
+  };
+  await store.dispatch('updateCustomAttributes', {
+    conversationId: currentChat.value.id,
+    customAttributes: updatedAttributes,
+  });
+  // eslint-disable-next-line no-console
+  console.log('ai_disabled', aiDisabled.value);
+};
 </script>
 
 <template>
@@ -150,6 +174,14 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
         :parent-width="width"
         class="hidden md:flex"
       />
+      <div class="flex items-center gap-1 text-xs">
+        <ToggleSwitch
+          v-model="aiDisabled"
+          v-tooltip="$t('CONVERSATION.HEADER.AI_DISABLED_TOOLTIP')"
+          @change="onToggleAiDisabled"
+        />
+        <span>{{ $t('CONVERSATION.HEADER.AI_DISABLED') }}</span>
+      </div>
       <MoreActions :conversation-id="currentChat.id" />
     </div>
   </div>
