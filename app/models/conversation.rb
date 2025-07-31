@@ -281,7 +281,10 @@ class Conversation < ApplicationRecord
       CONVERSATION_READ => -> { saved_change_to_contact_last_seen_at? },
       CONVERSATION_CONTACT_CHANGED => -> { saved_change_to_contact_id? }
     }.each do |event, condition|
-      condition.call && dispatcher_dispatch(event, status_change)
+      next unless condition.call
+
+      Rails.logger.info("Conversation #{id} opened") if event == CONVERSATION_OPENED
+      dispatcher_dispatch(event, status_change)
     end
   end
 
