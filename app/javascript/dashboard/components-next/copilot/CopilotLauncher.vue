@@ -3,8 +3,6 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from 'dashboard/components-next/button/Button.vue';
 import { useUISettings } from 'dashboard/composables/useUISettings';
-import { useMapGetter } from 'dashboard/composables/store';
-import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 const route = useRoute();
 
 const { uiSettings, updateUISettings } = useUISettings();
@@ -24,21 +22,8 @@ const isConversationRoute = computed(() => {
   return CONVERSATION_ROUTES.includes(route.name);
 });
 
-const currentAccountId = useMapGetter('getCurrentAccountId');
-const isFeatureEnabledonAccount = useMapGetter(
-  'accounts/isFeatureEnabledonAccount'
-);
-
 const showCopilotLauncher = computed(() => {
-  const isCaptainEnabled = isFeatureEnabledonAccount.value(
-    currentAccountId.value,
-    FEATURE_FLAGS.CAPTAIN
-  );
-  return (
-    isCaptainEnabled &&
-    !uiSettings.value.is_copilot_panel_open &&
-    !isConversationRoute.value
-  );
+  return !uiSettings.value.is_copilot_panel_open && !isConversationRoute.value;
 });
 const toggleSidebar = () => {
   updateUISettings({

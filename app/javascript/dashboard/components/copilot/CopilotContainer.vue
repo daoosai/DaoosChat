@@ -4,7 +4,6 @@ import { useStore } from 'dashboard/composables/store';
 import Copilot from 'dashboard/components-next/copilot/Copilot.vue';
 import { useMapGetter } from 'dashboard/composables/store';
 import { useUISettings } from 'dashboard/composables/useUISettings';
-import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 defineProps({
   conversationInboxType: {
     type: String,
@@ -25,12 +24,6 @@ const messages = computed(() =>
     selectedCopilotThreadId.value
   )
 );
-
-const currentAccountId = useMapGetter('getCurrentAccountId');
-const isFeatureEnabledonAccount = useMapGetter(
-  'accounts/isFeatureEnabledonAccount'
-);
-
 const selectedAssistantId = ref(null);
 const { uiSettings, updateUISettings } = useUISettings();
 
@@ -63,12 +56,8 @@ const setAssistant = async assistant => {
 };
 
 const shouldShowCopilotPanel = computed(() => {
-  const isCaptainEnabled = isFeatureEnabledonAccount.value(
-    currentAccountId.value,
-    FEATURE_FLAGS.CAPTAIN
-  );
   const { is_copilot_panel_open: isCopilotPanelOpen } = uiSettings.value;
-  return isCaptainEnabled && isCopilotPanelOpen && !uiFlags.value.fetchingList;
+  return isCopilotPanelOpen && !uiFlags.value.fetchingList;
 });
 
 const handleReset = () => {
