@@ -32,6 +32,24 @@ RSpec.describe 'Api::V1::Accounts::Captain::Assistants', type: :request do
         )
       end
     end
+
+    context 'when captain feature is disabled for the account' do
+      before do
+        account.disable_features!(:captain_integration)
+        create_list(:captain_assistant, 2, account: account)
+      end
+
+      it 'allows admin to fetch assistants' do
+        expect(account.reload).not_to be_feature_enabled('captain_integration')
+
+        get "/api/v1/accounts/#{account.id}/captain/assistants",
+            headers: admin.create_new_auth_token,
+            as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(json_response[:payload].length).to eq(2)
+      end
+    end
   end
 
   describe 'GET /api/v1/accounts/{account.id}/captain/assistants/{id}' do
@@ -100,6 +118,23 @@ RSpec.describe 'Api::V1::Accounts::Captain::Assistants', type: :request do
         expect(json_response[:name]).to eq('New Assistant')
         expect(json_response[:response_guidelines]).to eq(['Be helpful', 'Be concise'])
         expect(json_response[:guardrails]).to eq(['No harmful content', 'Stay on topic'])
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'when captain feature is disabled for the account' do
+      before { account.disable_features!(:captain_integration) }
+
+      it 'still allows admin to create assistant' do
+        expect(account.reload).not_to be_feature_enabled('captain_integration')
+
+        expect do
+          post "/api/v1/accounts/#{account.id}/captain/assistants",
+               params: valid_attributes,
+               headers: admin.create_new_auth_token,
+               as: :json
+        end.to change(Captain::Assistant, :count).by(1)
+
         expect(response).to have_http_status(:success)
       end
     end
