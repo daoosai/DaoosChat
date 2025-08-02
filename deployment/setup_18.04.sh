@@ -7,17 +7,17 @@
 apt update && apt upgrade -y
 apt install -y curl
 curl -sL https://deb.nodesource.com/setup_12.x | bash -
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 apt update
 
 apt install -y \
-	git software-properties-common imagemagick libpq-dev \
+        git software-properties-common imagemagick libpq-dev \
     libxml2-dev libxslt1-dev file g++ gcc autoconf build-essential \
     libssl-dev libyaml-dev libreadline-dev gnupg2 nginx redis-server \
     redis-tools postgresql postgresql-contrib certbot \
-    python-certbot-nginx nodejs yarn patch ruby-dev zlib1g-dev liblzma-dev \
+    python-certbot-nginx nodejs patch ruby-dev zlib1g-dev liblzma-dev \
     libgmp-dev libncurses5-dev libffi-dev libgdbm5 libgdbm-dev sudo
+
+npm install -g pnpm
 
 adduser --disabled-login --gecos "" chatwoot
 
@@ -54,7 +54,7 @@ else
   git checkout $1;
 fi
 bundle
-yarn
+pnpm install --frozen-lockfile
 
 cp .env.example .env
 sed -i -e "/SECRET_KEY_BASE/ s/=.*/=$secret/" .env
