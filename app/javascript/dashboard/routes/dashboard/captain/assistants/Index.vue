@@ -1,12 +1,10 @@
 <script setup>
 import { computed, onMounted, ref, nextTick } from 'vue';
 import { useMapGetter, useStore } from 'dashboard/composables/store';
-import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 
 import AssistantCard from 'dashboard/components-next/captain/assistant/AssistantCard.vue';
 import DeleteDialog from 'dashboard/components-next/captain/pageComponents/DeleteDialog.vue';
 import PageLayout from 'dashboard/components-next/captain/PageLayout.vue';
-import CaptainPaywall from 'dashboard/components-next/captain/pageComponents/Paywall.vue';
 import CreateAssistantDialog from 'dashboard/components-next/captain/pageComponents/assistant/CreateAssistantDialog.vue';
 import AssistantPageEmptyState from 'dashboard/components-next/captain/pageComponents/emptyStates/AssistantPageEmptyState.vue';
 import FeatureSpotlightPopover from 'dashboard/components-next/feature-spotlight/FeatureSpotlightPopover.vue';
@@ -82,7 +80,6 @@ onMounted(() => store.dispatch('captainAssistants/get'));
     :show-pagination-footer="false"
     :is-fetching="isFetching"
     :is-empty="!assistants.length"
-    :feature-flag="FEATURE_FLAGS.CAPTAIN"
     @click="handleCreate"
   >
     <template #knowMore>
@@ -97,10 +94,6 @@ onMounted(() => store.dispatch('captainAssistants/get'));
     </template>
     <template #emptyState>
       <AssistantPageEmptyState @click="handleCreate" />
-    </template>
-
-    <template #paywall>
-      <CaptainPaywall />
     </template>
 
     <template #body>
