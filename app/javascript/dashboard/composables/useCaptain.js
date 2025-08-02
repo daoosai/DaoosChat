@@ -2,14 +2,13 @@ import { computed } from 'vue';
 import { useStore } from 'dashboard/composables/store.js';
 import { useAccount } from 'dashboard/composables/useAccount';
 import { useCamelCase } from 'dashboard/composables/useTransformKeys';
-import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 
 export function useCaptain() {
   const store = useStore();
-  const { isCloudFeatureEnabled, currentAccount } = useAccount();
+  const { currentAccount } = useAccount();
 
   const captainEnabled = computed(() => {
-    return isCloudFeatureEnabled(FEATURE_FLAGS.CAPTAIN);
+    return true;
   });
 
   const captainLimits = computed(() => {

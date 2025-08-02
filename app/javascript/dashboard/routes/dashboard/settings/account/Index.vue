@@ -72,10 +72,7 @@ export default {
       );
     },
     showAudioTranscriptionConfig() {
-      return this.isFeatureEnabledonAccount(
-        this.accountId,
-        FEATURE_FLAGS.CAPTAIN
-      );
+      return true;
     },
     languagesSortedByCode() {
       const enabledLanguages = [...this.enabledLanguages];
