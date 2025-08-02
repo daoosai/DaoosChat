@@ -109,6 +109,11 @@ Deploying Chatwoot to Heroku is a breeze. It's as simple as clicking this button
 
 Follow this [link](https://www.chatwoot.com/docs/environment-variables) to understand setting the correct environment variables for the app to work with all the features. There might be breakages if you do not set the relevant environment variables.
 
+### Disabling enterprise features in community builds
+
+If you're running a community build that still includes the `enterprise/` directory, set the environment variable `DISABLE_ENTERPRISE=true`.
+This forces `IS_ENTERPRISE=false` so the dashboard renders community behavior by default.
+
 
 ### DigitalOcean 1-Click Kubernetes deployment
 
