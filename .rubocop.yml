@@ -219,6 +219,8 @@ AllCops:
     - 'tmp/**/*'
     - 'storage/**/*'
     - 'db/migrate/20230426130150_init_schema.rb'
+    - '**/*.yml'
+    - '**/*.yaml'
 
 FactoryBot/SyntaxMethods:
   Enabled: false

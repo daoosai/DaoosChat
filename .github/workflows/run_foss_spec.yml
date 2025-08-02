@@ -53,6 +53,15 @@ jobs:
       - name: Install pnpm dependencies
         run: pnpm i
 
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Run Rubocop
+        run: bundle exec rubocop
+
+      - name: Lint YAML
+        run: yamllint .github/workflows/run_foss_spec.yml
+
       - name: Strip enterprise code
         run: |
           rm -rf enterprise
