@@ -5,7 +5,6 @@ import { useAlert } from 'dashboard/composables';
 import { useI18n } from 'vue-i18n';
 import { OnClickOutside } from '@vueuse/components';
 import { useRouter } from 'vue-router';
-import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 
 import Button from 'dashboard/components-next/button/Button.vue';
 import Checkbox from 'dashboard/components-next/checkbox/Checkbox.vue';
@@ -13,7 +12,6 @@ import DropdownMenu from 'dashboard/components-next/dropdown-menu/DropdownMenu.v
 import DeleteDialog from 'dashboard/components-next/captain/pageComponents/DeleteDialog.vue';
 import BulkDeleteDialog from 'dashboard/components-next/captain/pageComponents/BulkDeleteDialog.vue';
 import PageLayout from 'dashboard/components-next/captain/PageLayout.vue';
-import CaptainPaywall from 'dashboard/components-next/captain/pageComponents/Paywall.vue';
 import AssistantSelector from 'dashboard/components-next/captain/pageComponents/AssistantSelector.vue';
 import ResponseCard from 'dashboard/components-next/captain/assistant/ResponseCard.vue';
 import CreateResponseDialog from 'dashboard/components-next/captain/pageComponents/response/CreateResponseDialog.vue';
@@ -266,7 +264,6 @@ onMounted(() => {
     :is-fetching="isFetching"
     :is-empty="!filteredResponses.length"
     :show-pagination-footer="!isFetching && !!filteredResponses.length"
-    :feature-flag="FEATURE_FLAGS.CAPTAIN"
     @update:current-page="onPageChange"
     @click="handleCreate"
   >
@@ -283,10 +280,6 @@ onMounted(() => {
 
     <template #emptyState>
       <ResponsePageEmptyState @click="handleCreate" />
-    </template>
-
-    <template #paywall>
-      <CaptainPaywall />
     </template>
 
     <template #controls>
