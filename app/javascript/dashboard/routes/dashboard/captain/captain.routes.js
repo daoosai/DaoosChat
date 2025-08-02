@@ -14,7 +14,7 @@ export const routes = [
     component: AssistantIndex,
     name: 'captain_assistants_index',
     meta: {
-      permissions: ['administrator'],
+      permissions: ['administrator', 'super_admin'],
     },
   },
   {
@@ -22,7 +22,7 @@ export const routes = [
     component: AssistantEdit,
     name: 'captain_assistants_edit',
     meta: {
-      permissions: ['administrator'],
+      permissions: ['administrator', 'super_admin'],
     },
   },
   {
@@ -32,7 +32,7 @@ export const routes = [
     component: AssistantInboxesIndex,
     name: 'captain_assistants_inboxes_index',
     meta: {
-      permissions: ['administrator'],
+      permissions: ['administrator', 'super_admin'],
     },
   },
   {
@@ -42,7 +42,7 @@ export const routes = [
     component: AssistantGuardrailsIndex,
     name: 'captain_assistants_guardrails_index',
     meta: {
-      permissions: ['administrator'],
+      permissions: ['administrator', 'super_admin'],
     },
   },
   {
@@ -52,7 +52,7 @@ export const routes = [
     component: AssistantGuidelinesIndex,
     name: 'captain_assistants_guidelines_index',
     meta: {
-      permissions: ['administrator'],
+      permissions: ['administrator', 'super_admin'],
     },
   },
   {
@@ -60,7 +60,7 @@ export const routes = [
     component: DocumentsIndex,
     name: 'captain_documents_index',
     meta: {
-      permissions: ['administrator'],
+      permissions: ['administrator', 'super_admin'],
     },
   },
   {
@@ -68,7 +68,7 @@ export const routes = [
     component: ResponsesIndex,
     name: 'captain_responses_index',
     meta: {
-      permissions: ['administrator'],
+      permissions: ['administrator', 'super_admin'],
     },
   },
 ];
