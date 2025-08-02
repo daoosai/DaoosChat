@@ -13,7 +13,13 @@ export const getCurrentAccount = ({ accounts } = {}, accountId = null) => {
 
 export const getUserPermissions = (user, accountId) => {
   const currentAccount = getCurrentAccount(user, accountId) || {};
-  return currentAccount.permissions || [];
+  const permissions = currentAccount.permissions || [];
+
+  if (user?.type === 'SuperAdmin') {
+    return [...permissions, 'super_admin'];
+  }
+
+  return permissions;
 };
 
 export const getUserRole = (user, accountId) => {
