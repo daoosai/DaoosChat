@@ -1,0 +1,57 @@
+name: CI with Docker-in-Docker
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # ──────────────────────────────────────────────────────────────
+    # 1) sidecar-контейнер с dockerd (+ TCP-порт 2375)
+    # ──────────────────────────────────────────────────────────────
+    services:
+      docker:
+        image: docker:25.0-dind      # образ с демоном dockerd
+        options: >-
+          --privileged               # dind нуждается в privil. режиме
+        env:
+          DOCKER_TLS_CERTDIR: ""     # отключаем TLS, нам важен «голый» TCP
+        ports:
+          - 2375:2375                # публикуем dockerd наружу
+
+    # GitHub-раннер будет «общаться» с докером по TCP:
+    env:
+      DOCKER_HOST: tcp://localhost:2375
+
+    steps:
+      # ────────────────────────────────────────────────────────────
+      # 2) Клонируем репозиторий
+      # ────────────────────────────────────────────────────────────
+      - uses: actions/checkout@v4
+
+      # ────────────────────────────────────────────────────────────
+      # 3) Ставим compose-плагин (Compose V2) в раннер
+      #    На ubuntu-latest CLI докера уже есть, нужен только плагин
+      # ────────────────────────────────────────────────────────────
+      - name: Install Docker Compose plugin
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y docker-compose-plugin
+          docker compose version    # проверяем, что плагин доступен
+
+      # ────────────────────────────────────────────────────────────
+      # 4) Ваши привычные команды
+      # ────────────────────────────────────────────────────────────
+      - name: Build & run stack
+        run: |
+          docker compose down || true   # не падаем, если сервисов ещё нет
+          docker compose build
+          docker compose up -d
+          docker ps -a
+
+      # ────────────────────────────────────────────────────────────
+      # 5) Здесь можно добавить тесты, линтеры и т.д.
+      # ────────────────────────────────────────────────────────────
