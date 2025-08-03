@@ -45,14 +45,14 @@ sudo sed -i "s/^# *requirepass .*$/requirepass redispass123/" /etc/redis/redis.c
 sudo service redis-server restart
 
 ##### 4. Ruby / Node deps #####
-# Ruby 3.4 уже есть (см. лог Codex). Установим bundler и yarn
+# Ruby 3.4 уже есть (см. лог Codex). Установим bundler и pnpm
 gem install bundler -N
-corepack enable                 # включает yarn, pnpm, etc.
-corepack prepare yarn@3.6.4 --activate
+corepack enable                 # включает pnpm и другие пакетные менеджеры
+corepack prepare pnpm@10.0.0 --activate
 
 bundle config set --local deployment 'true'
 bundle install --jobs=4 --retry=3
-yarn install --frozen-lockfile
+pnpm install --frozen-lockfile
 
 ##### 5. Подготовка БД и ассетов #####
 bundle exec rails db:prepare
