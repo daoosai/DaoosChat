@@ -48,7 +48,7 @@ sudo service redis-server restart
 # Ruby 3.4 уже есть (см. лог Codex). Установим bundler и yarn
 gem install bundler -N
 corepack enable                 # включает yarn, pnpm, etc.
-yarn set version stable
+corepack prepare yarn@3.6.4 --activate
 
 bundle config set --local deployment 'true'
 bundle install --jobs=4 --retry=3
