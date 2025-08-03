@@ -46,13 +46,15 @@ sudo service redis-server restart
 
 ##### 4. Ruby / Node deps #####
 # Ruby 3.4 уже есть (см. лог Codex). Установим bundler и pnpm
-gem install bundler -N
+# lockfile создан bundler 2.5.16, установим именно эту версию
+gem install bundler:2.5.16 -N
 corepack enable                 # включает pnpm и другие пакетные менеджеры
 corepack prepare pnpm@10.0.0 --activate
 
 bundle config set --local deployment 'true'
 bundle install --jobs=4 --retry=3
-pnpm install --frozen-lockfile
+# lockfile может не совпадать с package.json, поэтому отключаем frozen-lockfile
+pnpm install --no-frozen-lockfile
 
 ##### 5. Подготовка БД и ассетов #####
 bundle exec rails db:prepare
