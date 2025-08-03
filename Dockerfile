@@ -1,12 +1,12 @@
 FROM ruby:3.4.4
 
-# Установим системные зависимости, Node.js и Yarn
+# Install system dependencies, Node.js and pnpm
 RUN apt-get update -qq && apt-get install -y \
     curl gnupg build-essential libpq-dev git \
-  && curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
+  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
   && apt-get install -y nodejs \
   && corepack enable \
-  && corepack prepare yarn@1.22.22 --activate
+  && corepack prepare pnpm@10.0.0 --activate
 
 WORKDIR /app
 COPY Gemfile* ./
@@ -22,10 +22,10 @@ RUN rm -f package-lock.json && \
     chown -R root:root /app && \
     chmod -R 755 /app
 
-RUN yarn install --ignore-engines && \
-    yarn add -D sass-embedded vite-plugin-ruby postcss postcss-preset-env autoprefixer @egoist/tailwindcss-icons
+RUN pnpm install --ignore-engine && \
+    pnpm add -D sass-embedded vite-plugin-ruby postcss postcss-preset-env autoprefixer @egoist/tailwindcss-icons
 
-RUN yarn add -D \
+RUN pnpm add -D \
   postcss \
   postcss-preset-env \
   autoprefixer \
@@ -34,12 +34,12 @@ RUN yarn add -D \
   @vitejs/plugin-vue \
   @vue/compiler-sfc
 
-# Сборка основного UI
-RUN yarn vite build --config vite.config.ts
+# Build main UI
+RUN pnpm vite build --config vite.config.ts
 
-# Затем, опционально, SDK
+# Then, optionally, the SDK
 ENV BUILD_MODE=library
-RUN yarn vite build --config vite.config.ts
+RUN pnpm vite build --config vite.config.ts
 
 RUN mkdir -p log && touch log/development.log
 
