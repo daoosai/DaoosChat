@@ -8,8 +8,10 @@ export NODE_ENV=production
 export INSTALLATION_ENV=codex      # отличим от docker
 export DATABASE_URL=postgres://postgres:supersecure123@localhost:5432/chatwoot
 export REDIS_URL=redis://:redispass123@localhost:6379
-export SECRET_KEY_BASE=11860b3dd8e707e0c25f8fb5cd9ada771e9b437b17b0a4492bba36850cbfe71451d0451d264122830e831f55706bbd4352cb18b6e7dddba0cf61c7b63cc5d2de
 export FRONTEND_URL=https://chat.daoos.ai
+export NODE_OPTIONS="--max-old-space-size=4096"
+# полный секретный ключ на одной строке, иначе скрипт прерывается
+export SECRET_KEY_BASE=11860b3dd8e707e0c25f8fb5cd9ada771e9b437b17b0a4492bba36850cbfe71451d0451d264122830e831f55706bbd4352cb18b6e7dddba0cf61c7b63cc5d2de
 
 ##### 1. Системные пакеты #####
 sudo apt-get update -y
