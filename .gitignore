@@ -94,3 +94,18 @@ yarn-debug.log*
 .vscode
 .claude/settings.local.json
 .cursor
+
+# Bundler artifacts
+/vendor/bundle/
+
+
+# Bundler artifacts
+/vendor/bundle/
+
+
+# Bundler artifacts
+/vendor/bundle/
+
+# Bundler artifacts
+/vendor/bundle/
+
