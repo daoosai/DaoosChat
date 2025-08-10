@@ -47,6 +47,9 @@ jobs:
       - name: Install frontend deps
         run: pnpm install --frozen-lockfile
 
+      - name: Build Vite assets
+        run: pnpm exec vite build
+
       - name: Precompile Rails assets (Vite)
         run: |
           bundle exec rails assets:clobber
@@ -60,7 +63,8 @@ jobs:
           name: assets-${{ github.sha }}
           path: |
             build-assets.tgz
-            public/vite/**
+            public/vite/manifest.json
+            public/vite/assets/**
             public/assets/**
             public/packs/**
           if-no-files-found: warn
