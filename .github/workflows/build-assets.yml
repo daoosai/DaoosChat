@@ -1,8 +1,8 @@
 name: Build assets on ubuntu
 
-on:
+'on':
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -27,20 +27,19 @@ jobs:
       # Ruby как на сервере + кэш bundle
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4.5'
+          ruby-version: .ruby-version
           bundler-cache: true
 
-      # Node 20 + pnpm 10 (исправляет "pnpm not found")
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-
+      # pnpm 10 + Node по версии из .nvmrc
       - uses: pnpm/action-setup@v4
         with:
           version: 10
           run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - run: |
           node -v
           pnpm -v
